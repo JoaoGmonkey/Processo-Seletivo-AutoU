@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Classificador de Emails com IA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>📬 Classificador de Emails com IA</h1>
+      <p>Envie um arquivo <strong>.txt</strong> ou <strong>.pdf</strong> ou cole o texto do email. O sistema classifica como <em>Produtivo</em> ou <em>Improdutivo</em> e sugere uma resposta automática.</p>
+    </header>
+
+    <section class="card">
+      <form id="emailForm">
+        <div class="field">
+          <label for="email_file">Upload de arquivo (.txt ou .pdf)</label>
+          <input type="file" id="email_file" name="email_file" accept=".txt,.pdf">
+        </div>
+
+        <div class="divider"><span>ou</span></div>
+
+        <div class="field">
+          <label for="email_text">Colar texto do email</label>
+          <textarea id="email_text" name="email_text" rows="8" placeholder="Cole aqui o conteúdo do email..."></textarea>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn">Processar</button>
+          <button type="reset" class="btn btn-secondary">Limpar</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="results" class="card hidden">
+      <h2>Resultado</h2>
+      <div class="badges">
+        <span id="category" class="badge">Categoria</span>
+        <span id="confidence" class="badge badge-soft hidden">Confiança</span>
+      </div>
+      <p id="rationale" class="muted"></p>
+
+      <h3>Resposta sugerida</h3>
+      <pre id="suggested_reply" class="reply"></pre>
+
+      <details class="details">
+        <summary>Ver trecho do email analisado</summary>
+        <pre id="excerpt" class="excerpt"></pre>
+      </details>
+    </section>
+
+    <footer class="footer">
+      <p>Feito com Flask + NLP básico, com opção de integrar Hugging Face ou OpenAI via variáveis de ambiente.</p>
+    </footer>
+  </div>
+
+<script>
+  const form = document.getElementById('emailForm');
+  const results = document.getElementById('results');
+  const category = document.getElementById('category');
+  const confidence = document.getElementById('confidence');
+  const rationale = document.getElementById('rationale');
+  const suggested = document.getElementById('suggested_reply');
+  const excerpt = document.getElementById('excerpt');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    results.classList.add('hidden');
+
+    const formData = new FormData(form);
+    const res = await fetch('/process', { method: 'POST', body: formData });
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.error || 'Erro no processamento');
+      return;
+    }
+
+    category.textContent = data.category;
+    category.className = 'badge ' + (data.category === 'Produtivo' ? 'badge-good' : 'badge-warn');
+
+    if (data.confidence !== null) {
+      confidence.textContent = 'Confiança: ' + data.confidence;
+      confidence.classList.remove('hidden');
+    } else {
+      confidence.classList.add('hidden');
+    }
+
+    rationale.textContent = data.rationale || '';
+    suggested.textContent = data.suggested_reply || '';
+    excerpt.textContent = data.original_excerpt || '';
+
+    results.classList.remove('hidden');
+    results.scrollIntoView({ behavior: 'smooth' });
+  });
+</script>
+</body>
+</html>
