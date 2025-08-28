@@ -2,7 +2,7 @@
 
 Aplicação web simples que **classifica** emails como **Produtivo** ou **Improdutivo** e **sugere respostas automáticas**.
 
-## ⚙️ Funcionalidades
+##  Funcionalidades
 - Upload de **.txt** ou **.pdf** ou colar texto diretamente.
 - **Pré-processamento NLP** (remoção de stopwords, stemming leve).
 - **Classificação** via:
@@ -12,7 +12,7 @@ Aplicação web simples que **classifica** emails como **Produtivo** ou **Improd
 - **Sugestão de resposta** adequada à categoria.
 - Interface moderna e responsiva.
 
-## 🚀 Como rodar localmente
+##  Como rodar
 ### 1) Clonar/baixar o repositório
 ```bash
 git clone <seu-fork-ou-repo>.git
@@ -28,7 +28,7 @@ source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-> Dica: se não quiser usar modelos externos, você pode comentar `transformers`, `torch` e `openai` no `requirements.txt` e usar apenas a regra básica.
+você pode comentar `transformers`, `torch` e `openai` no `requirements.txt` e usar apenas a regra básica.
 
 ### 3) (Opcional) Ativar Hugging Face ou OpenAI
 #### Hugging Face (zero-shot)
@@ -43,7 +43,7 @@ export USE_OPENAI=1
 export OPENAI_API_KEY="sua_chave"
 ```
 
-> **Importante:** Não ative `USE_HF` e `USE_OPENAI` ao mesmo tempo – o OpenAI tem prioridade.
+> **Importante:** Não ative `USE_HF` e `USE_OPENAI` ao mesmo tempo
 
 ### 4) Executar
 ```bash
@@ -67,21 +67,17 @@ email-ai-app/
 └─ README.md
 ```
 
-## 🧪 Dados de exemplo
+##  Dados de exemplo
 A pasta `sample_emails/` contém exemplos:
 - `produtivo_suporte.txt`: solicitação de suporte (Produtivo).
 - `improdutivo_agradecimento.txt`: agradecimento (Improdutivo).
 
-## 📝 Observações
+##  Observações
 - O classificador por regra é apenas um **baseline**. Para mais qualidade, use **Hugging Face** (zero-shot) ou **OpenAI**.
 - PDFs são lidos via `pdfminer.six`. Se um PDF malformado falhar, o texto pode vir vazio.
 
-## 🔒 Segurança
+##  Segurança
 - Limite de upload de 10 MB.
 - Extensões permitidas: `.txt`, `.pdf`.
 
-## 🧰 Próximos passos (sugestões)
-- Persistir histórico das classificações (SQLite).
-- Treinar um pequeno modelo supervisionado com dataset real.
-- Editor rich-text para a resposta sugerida + botões "copiar".
-- Detecção automática de idioma e normalização adicional.
+
